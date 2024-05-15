@@ -372,15 +372,11 @@ def multi_neuron_net(desired_func, train_data, test_data, performance=Performanc
 
 
 if __name__ == "__main__":
-    # basic_net(AND, data, data)
-    # two_layer_net(EQUAL,train_data=data, test_data=data)
-
-    # two_layer_net(square, train_data=square_data, test_data=square_data)
-
-    # multi_neuron_net(square,train_data=square_data, test_data=square_data)
+    basic_net(AND, data, data)
+    two_layer_net(EQUAL,train_data=data, test_data=data)
+    multi_neuron_net(square,train_data=square_data, test_data=square_data)
     multi_neuron_net(donut, train_data=donut_data, test_data=donut_data)
 
-    # multi_neuron_net(EQUAL,train_data=data, test_data=data)
 
     # basic_net(NAND)
     # basic_net(OR)
