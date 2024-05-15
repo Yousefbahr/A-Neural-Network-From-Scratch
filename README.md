@@ -2,6 +2,8 @@
 
 ## Description
 
+![Figure_1](https://github.com/Yousefbahr/A-Neural-Network-From-Scratch/assets/101262861/91911a80-6f58-46da-8492-f022ec23cb16)
+
 
 An implementation of a neural network from scratch using a 
 sigmoid activation function and a mean squared error loss function.
