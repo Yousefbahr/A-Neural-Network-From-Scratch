@@ -5,14 +5,6 @@ import matplotlib.pyplot as plt
 from functions import *
 from data import *
 
-def abs_mean(values):
-    """Compute the mean of the absolute values a set of numbers.
-    For computing the stopping condition for training neural nets"""
-    abs_vals = [abs(num) for num in values]
-    total = sum(abs_vals)
-    return total / float(len(abs_vals))
-
-
 class Performance:
     """
     For computing the performance of the neural net
@@ -107,7 +99,7 @@ class Neural_Net:
         self.weights = []
         self.performance = performance
         self.desired_output_func = desired_output_func
-        self.rate = 1
+        self.rate = 1e-1
         # add weights and inputs
         for neuron in neurons:
             try:
@@ -155,16 +147,22 @@ class Neural_Net:
                 other_sum +=  weight.get_value() * self.delta(node_child)
             return result * other_sum
 
-    def train(self, target_performance = 0.0001, random_weights = True):
+    def train(self, random_weights = True):
+        """
+        Maximize negative log loss or MSE loss
+        using Stochastic gradient ascent
+        """
         random.seed(42)
-        # Set random numbers for weights (0 or 1)
+        # Set random numbers for weights (-1 to 2)
         if random_weights:
             for weight in self.weights:
                 weight.set_value(random.randrange(-1, 3))
-                print(f"{weight} initally, {weight.get_value()}")
+                # print(f"{weight} initally, {weight.get_value()}")
 
         iteration = 0
+        old_abs_performance = -1000
         while iteration < 10000:
+            old_weights = np.array([w.get_value() for w in self.weights])
             performances = []
             for j, datum in enumerate(self.train_data):
 
@@ -181,17 +179,40 @@ class Neural_Net:
                 performance = self.performance.output(desired, output)
                 performances.append(performance)
 
+            mean_performance = np.mean(performances)
+            change_in_weights = np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights))
             if iteration % 1000 == 0:
-                abs_mean_performance = abs_mean(performances)
-                print(f"after {iteration} iterations performance is: {abs_mean_performance}")
-                if abs_mean_performance <= target_performance:
-                    print(f"Target performance exceeded {abs_mean_performance}")
-                    break
+                print(f"after {iteration} iterations:")
+                print(f"Performance is: {mean_performance}")
+                print(f"Change in Weights: "
+                      f"{change_in_weights}")
+                print(f"Change in performance: {mean_performance - old_abs_performance}")
+
+            # log loss threshold
+            # if mean_performance >= -1e-3:
+            if change_in_weights <= 1e-2:
+            # if mean_performance - old_abs_performance <= 1e-6:
+                print("---------")
+                print(f"Change in performance: {mean_performance - old_abs_performance}")
+                # print(np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights)))
+                print(f"Change in Weights: "
+                      f"{change_in_weights}")
+                print(f"Iter {iteration} | Converged on loss: {mean_performance}")
+                break
+
+            # MSE loss threshold
+            # if mean_performance >= -0.0001:
+            #     print(np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights)))
+            #     print(f"Iter {iteration} | Converged on loss: {mean_performance}")
+            #     break
+
             iteration += 1
+            old_abs_performance = mean_performance
 
         print()
-        for weight in self.weights:
-            print(f"{weight} finally, {weight.get_value()}")
+        # Print weights' values
+        # for weight in self.weights:
+        #     print(f"{weight} finally, {weight.get_value()}")
 
     def get_output(self, test_data):
         correct_ans = 0
@@ -209,7 +230,7 @@ class Neural_Net:
             if correct == round(result):
                 correct_ans += 1
 
-            print(f"test {my_inputs} -> {result}, correct answer -> {correct}")
+            # print(f"test {my_inputs} -> {result}, correct answer -> {correct}")
 
         print(f"Accuracy = {correct_ans / total}")
 
@@ -222,6 +243,9 @@ class Neural_Net:
         Made only for two input nodes
         """
         first_layer_neurons = []
+        x_coord = -6
+        y_coord = 6
+
         missing_xaxis = False
         for neuron in self.neurons:
             # Must be only the first layer of Neurons
@@ -289,6 +313,7 @@ def basic_net(desired_func, train_data, test_data, performance=Performance()):
     # Only of type 'Neuron' is inserted in the net
     net = Neural_Net([A], desired_func, performance,
                      train_data=train_data)
+    print("----Starting Training----")
     net.train()
 
     net.get_output(test_data)
@@ -324,6 +349,7 @@ def two_layer_net(desired_func,train_data, test_data, performance=Performance())
     # only 'Neurons' are inserted, not even the inputs
     net = Neural_Net([A, B, C],  desired_func, performance ,
                      train_data=train_data)
+    print("----Starting Training----")
     net.train()
 
     net.get_output(test_data)
@@ -364,6 +390,7 @@ def multi_neuron_net(desired_func, train_data, test_data, performance=Performanc
     # only of type 'Neurons' are inserted, not even the inputs
     net = Neural_Net([A, B, C, D],  desired_func, performance,
                      train_data=train_data)
+    print("----Starting Training----")
     net.train()
 
     net.get_output(test_data)
@@ -371,13 +398,19 @@ def multi_neuron_net(desired_func, train_data, test_data, performance=Performanc
     net.plot(train_data)
 
 
+
 if __name__ == "__main__":
-    basic_net(AND, data, data)
-    two_layer_net(EQUAL,train_data=data, test_data=data)
-    multi_neuron_net(square,train_data=square_data, test_data=square_data)
+
+    # basic_net(AND, logic_operators_data, logic_operators_data)
+    # two_layer_net(EQUAL,train_data=logic_operators_data, test_data=logic_operators_data)
+
+    # two_layer_net(square, train_data=square_data, test_data=square_data)
+
+    # multi_neuron_net(square,train_data=square_data, test_data=square_data)
     multi_neuron_net(donut, train_data=donut_data, test_data=donut_data)
 
+    # multi_neuron_net(EQUAL,train_data=logic_operators_data, test_data=logic_operators_data)
 
-    # basic_net(NAND)
-    # basic_net(OR)
+    # basic_net(NAND, logic_operators_data, logic_operators_data)
+    # basic_net(OR, logic_operators_data, logic_operators_data)
 
