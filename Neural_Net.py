@@ -5,15 +5,6 @@ import matplotlib.pyplot as plt
 from functions import *
 from data import *
 
-def abs_mean(values):
-    """Compute the mean of the absolute values a set of numbers.
-    For computing the stopping condition for training neural nets"""
-    # abs_vals = [abs(num) for num in values]
-    # total = sum(abs_vals)
-    total = sum(values)
-    return total / float(len(values))
-
-
 class Performance:
     """
     For computing the performance of the neural net
@@ -188,35 +179,35 @@ class Neural_Net:
                 performance = self.performance.output(desired, output)
                 performances.append(performance)
 
-            abs_mean_performance = abs_mean(performances)  # modified the abs part (no absolute)
+            mean_performance = np.mean(performances)
             change_in_weights = np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights))
             if iteration % 1000 == 0:
                 print(f"after {iteration} iterations:")
-                print(f"Performance is: {abs_mean_performance}")
+                print(f"Performance is: {mean_performance}")
                 print(f"Change in Weights: "
                       f"{change_in_weights}")
-                print(f"Change in performance: {abs_mean_performance - old_abs_performance}")
+                print(f"Change in performance: {mean_performance - old_abs_performance}")
 
             # log loss threshold
-            # if abs_mean_performance >= -1e-3:
+            # if mean_performance >= -1e-3:
             if change_in_weights <= 1e-2:
-            # if abs_mean_performance - old_abs_performance <= 1e-6:
+            # if mean_performance - old_abs_performance <= 1e-6:
                 print("---------")
-                print(f"Change in performance: {abs_mean_performance - old_abs_performance}")
+                print(f"Change in performance: {mean_performance - old_abs_performance}")
                 # print(np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights)))
                 print(f"Change in Weights: "
                       f"{change_in_weights}")
-                print(f"Iter {iteration} | Converged on loss: {abs_mean_performance}")
+                print(f"Iter {iteration} | Converged on loss: {mean_performance}")
                 break
 
             # MSE loss threshold
-            # if abs_mean_performance >= -0.0001:
+            # if mean_performance >= -0.0001:
             #     print(np.linalg.norm(np.array([w.get_value() for w in self.weights]) - np.array(old_weights)))
-            #     print(f"Iter {iteration} | Converged on loss: {abs_mean_performance}")
+            #     print(f"Iter {iteration} | Converged on loss: {mean_performance}")
             #     break
 
             iteration += 1
-            old_abs_performance = abs_mean_performance
+            old_abs_performance = mean_performance
 
         print()
         # Print weights' values
