@@ -1,12 +1,19 @@
 import math
+import numpy as np
 # ALL FUNCTIONS ONLY TAKE  TWO INPUTS
 
 def performance_func(desired, output):
-    return -0.5 * (desired - output) ** 2
+    # MSE LOSS
+    # return -0.5 * (desired - output) ** 2
+    # LOG LOSS
+    return  ( desired * np.log(output) + (1 - desired) * np.log(1 - output) )
 
 
 def derivative_func(desired, output):
-    return desired - output
+    # MSE LOSS
+    # return desired - output
+    # LOG LOSS
+    return  ( (desired / output) - ((1 - desired) / (1 - output)) )
 
 
 def AND(coordinate):
