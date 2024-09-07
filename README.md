@@ -2,7 +2,8 @@
 
 ## Description
 
----
+![Figure_1](https://github.com/Yousefbahr/A-Neural-Network-From-Scratch/assets/101262861/91911a80-6f58-46da-8492-f022ec23cb16)
+
 
 An implementation of a neural network from scratch using a 
 sigmoid activation function and a mean squared error loss function.
@@ -19,7 +20,7 @@ general ones that are already implemented.
 
 ## Usage
 
----
+
 ### Input Layer
 - Because we are dealing with xy coordinates, the input layer will only consist of two inputs
 and the bias. The value of the inputs will change but the bias won't.
@@ -36,7 +37,10 @@ i1 = InputNeuron("i1", value=1)
 i2 = InputNeuron("i2", value=1)
 i0 = InputNeuron("Bias", value=-1)
 ````
-### Adding Neurons in hidden layer
+
+---
+
+### Hidden layer
 
 - Initialize neurons in the hidden layer of only type **Neuron**.
 - Every neuron has inputs of type **Neuron** or **InputNeuron** and bias input.
@@ -45,8 +49,9 @@ i0 = InputNeuron("Bias", value=-1)
 ```
 A = Neuron("A", inputs[i1,i2,i0])
 ```
+---
 
-### Adding Weights
+### Weights
 
 - For every neuron, you add weight using **add_weight** function. 
 - **Weight** object takes two parameters of type **InputNeuron** or **Neuron**.This represents the weight connecting the first neuron to the second neuron.
@@ -57,6 +62,8 @@ A = Neuron("A", inputs[i1,i2,i0])
     A.add_weight(Weight(i2, A))
     A.add_weight(Weight(i0, A))
 ```
+---
+
 ### Training
 - Initialize the net with class **Neural_Net** that takes 4 paramters:
 1. **neurons**: List of neurons of type **Neuron** only.
@@ -68,12 +75,15 @@ A = Neuron("A", inputs[i1,i2,i0])
 net = Neural_Net([A], AND, performance, train_data=logic_operators_data)
 net.train()
 ```
+---
+
 ### Testing
 - **get_output** takes as parameter the testing data and prints accuracy and every test data point with the corresponding model's prediction.
 
 ```
     net.get_output(logic_operators_data)
 ```
+---
 
 ### Plotting 
 

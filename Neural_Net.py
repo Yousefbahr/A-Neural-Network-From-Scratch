@@ -400,6 +400,7 @@ def multi_neuron_net(desired_func, train_data, test_data, performance=Performanc
 
 
 if __name__ == "__main__":
+
     # basic_net(AND, logic_operators_data, logic_operators_data)
     # two_layer_net(EQUAL,train_data=logic_operators_data, test_data=logic_operators_data)
 
