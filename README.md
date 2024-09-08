@@ -6,7 +6,7 @@
 
 
 An implementation of a neural network from scratch using a 
-sigmoid activation function and a mean squared error loss function.
+sigmoid activation function and log loss function.
 
 - You can either implement your neural network function or use one of the 
 general ones that are already implemented.
